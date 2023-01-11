@@ -41,6 +41,14 @@ export default {
     }
   },
   created() {
+
+    fetch("https://localhost:44386/api/Election")
+      .then(response => response.json())
+      .then(data => {
+        this.updateChart(data);
+      });
+
+
     this.socket = io("localhost:3000", {
       path: "/vote/",
       transports: ['websocket', 'polling'],
@@ -75,15 +83,15 @@ export default {
       const labels: string[] = [];
       const datas: Int32Array[] = [];
 
-      for (var i = 0; i < message.Details.length; i++) {
-        datas.push(message.Details[i].VoteCount);
-        labels.push(message.Details[i].CandidateName);
-        console.log(message.Details[i]);
+      for (var i = 0; i < message.details.length; i++) {
+        datas.push(message.details[i].voteCount);
+        labels.push(message.details[i].candidateName);
+        console.log(message.details[i]);
       }
 
       self.chartData.datasets[0].data = datas;
       self.chartData.labels = labels;
-      self.options.title.text = message.DateTime;
+      self.options.title.text = message.dateTime;
 
       var pieChart = ChartJS.getChart("pie-chart");
 
